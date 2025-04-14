@@ -6,7 +6,7 @@ import { signToken } from "../helpers/jwt.js";
 export default class UserModel {
   static getCollection() {
     const db = getDB();
-    const collection = db.collection("User");
+    const collection = db.collection("users");
     return collection;
   }
 
