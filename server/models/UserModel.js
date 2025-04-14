@@ -1,8 +1,14 @@
 import { getDB } from "../config/mongodb.js";
-import { hashPassword } from "../helpers/bcrypt.js";
+import { comparePassword, hashPassword } from "../helpers/bcrypt.js";
 import validator from "validator";
+import { signToken } from "../helpers/jwt.js";
 
 export default class UserModel {
+  static getCollection() {
+    const db = getDB();
+    const collection = db.collection("User");
+    return collection;
+  }
   static async register(payload) {
     if (!payload.username) {
       throw new Error("Username is required");
@@ -39,10 +45,28 @@ export default class UserModel {
     await collection.insertOne(newUser);
     return "Berhasil menyimpan data user";
   }
-  static getCollection() {
-    const db = getDB();
-    const collection = db.collection("User");
-    return collection;
+  static async login(payload) {
+    if (!payload.username) {
+      throw new Error("Username is required");
+    }
+    if (!payload.password) {
+      throw new Error("Password is required");
+    }
+
+    const collection = UserModel.getCollection();
+    const user = await collection.findOne({ username: payload.username });
+    if (!user) {
+      throw new Error("Invalid username/password");
+    }
+
+    if (!comparePassword(payload.password, user.password)) {
+      throw new Error("Invalid username/password");
+    }
+    return {
+      access_token: signToken({
+        id: user._id,
+      }),
+    };
   }
   static async find() {
     const collection = UserModel.getCollection();

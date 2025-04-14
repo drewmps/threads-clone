@@ -8,9 +8,15 @@ export const userTypeDefs = `#graphql
     email: String
     password: String
   }
+  type LoginResponse {
+    access_token: String
+  }
+
   type Query {
     getUsers: [User]
+    login(username: String, password: String): LoginResponse
   }
+
   input UserInput {
     name: String
     username: String
@@ -26,6 +32,10 @@ export const userResolvers = {
     getUsers: async () => {
       const users = await UserModel.find();
       return users;
+    },
+    login: async (_, args) => {
+      const response = await UserModel.login(args);
+      return response;
     },
   },
   Mutation: {
