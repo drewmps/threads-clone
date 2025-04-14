@@ -8,13 +8,14 @@ export const userTypeDefs = `#graphql
     email: String
     password: String
   }
+
   type LoginResponse {
     access_token: String
   }
-
   type Query {
     getUsers: [User]
     login(username: String, password: String): LoginResponse
+    searchUser(keyword: String): [User]
   }
 
   input UserInput {
@@ -36,6 +37,10 @@ export const userResolvers = {
     login: async (_, args) => {
       const response = await UserModel.login(args);
       return response;
+    },
+    searchUser: async (_, args) => {
+      const users = await UserModel.search(args);
+      return users;
     },
   },
   Mutation: {

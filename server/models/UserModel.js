@@ -9,6 +9,7 @@ export default class UserModel {
     const collection = db.collection("User");
     return collection;
   }
+
   static async register(payload) {
     if (!payload.username) {
       throw new Error("Username is required");
@@ -45,6 +46,7 @@ export default class UserModel {
     await collection.insertOne(newUser);
     return "Berhasil menyimpan data user";
   }
+
   static async login(payload) {
     if (!payload.username) {
       throw new Error("Username is required");
@@ -67,6 +69,19 @@ export default class UserModel {
         id: user._id,
       }),
     };
+  }
+
+  static async search(payload) {
+    const collection = UserModel.getCollection();
+    const users = await collection
+      .find({
+        $or: [
+          { username: { $regex: payload.keyword, $options: "i" } },
+          { name: { $regex: payload.keyword, $options: "i" } },
+        ],
+      })
+      .toArray();
+    return users;
   }
   static async find() {
     const collection = UserModel.getCollection();
