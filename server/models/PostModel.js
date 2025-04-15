@@ -27,13 +27,16 @@ export default class PostModel {
   }
 
   static async createComment(payload) {
+    const collection = PostModel.getCollection();
     if (!payload.content) {
       throw new Error("Content is required");
     }
     if (!payload.username) {
       throw new Error("Username is required");
     }
-    const post = collection.findOne({ _id: new ObjectId(payload.postId) });
+    const post = await collection.findOne({
+      _id: new ObjectId(payload.postId),
+    });
     if (!post) {
       throw new Error("Post not found");
     }
@@ -44,7 +47,7 @@ export default class PostModel {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const collection = PostModel.getCollection();
+
     await collection.updateOne(
       { _id: new ObjectId(payload.postId) },
       { $push: { comments: newComment } }
