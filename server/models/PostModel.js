@@ -33,6 +33,11 @@ export default class PostModel {
     if (!payload.username) {
       throw new Error("Username is required");
     }
+    const post = collection.findOne({ _id: new ObjectId(payload.postId) });
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
     const newComment = {
       content: payload.content,
       username: payload.username,
