@@ -12,12 +12,29 @@ export const postTypeDefs = `#graphql
     createdAt: String
     updatedAt: String
   }
+
   type Post {
     _id: ID
     content: String
     tags: [String]
     imgUrl: String
     authorId: ID
+    comments: [Comment]
+    likes: [Like]
+    createdAt: String
+    updatedAt: String
+  }
+
+  type ReturnPostAuthor {
+    name: String
+  }
+  type ReturnPost {
+    _id: ID
+    content: String
+    tags: [String]
+    imgUrl: String
+    authorId: ID
+    author: ReturnPostAuthor
     comments: [Comment]
     likes: [Like]
     createdAt: String
@@ -38,6 +55,7 @@ export const postTypeDefs = `#graphql
 
   type Query {
     getPosts: [Post]
+    getPostById(postId: ID): ReturnPost
   }
   type Mutation {
     createPost(newPost: PostInput): String
@@ -50,6 +68,10 @@ export const postResolvers = {
     getPosts: async () => {
       const posts = await PostModel.getPosts();
       return posts;
+    },
+    getPostById: async (_, args) => {
+      const post = await PostModel.getPostById(args);
+      return post;
     },
   },
   Mutation: {

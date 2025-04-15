@@ -112,4 +112,39 @@ export default class PostModel {
       .toArray();
     return posts;
   }
+  static async getPostById({ postId }) {
+    const collection = PostModel.getCollection();
+    const posts = await collection
+      .aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $unwind: {
+            path: "$author",
+          },
+        },
+        {
+          $project: {
+            "author._id": 0,
+            "author.username": 0,
+            "author.email": 0,
+            "author.password": 0,
+          },
+        },
+        {
+          $match: {
+            _id: new ObjectId(postId),
+          },
+        },
+      ])
+      .toArray();
+    if (!posts.length === 0) throw new Error("Post not found");
+    return posts[0];
+  }
 }
