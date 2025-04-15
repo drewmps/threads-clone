@@ -4,6 +4,8 @@ export const postTypeDefs = `#graphql
   type Comment {
     content: String
     username: String
+    createdAt: String
+    updatedAt: String
   }
   type Like {
     username: String
@@ -17,11 +19,17 @@ export const postTypeDefs = `#graphql
     comments: [Comment]
     likes: [Like]
   }
+
   input PostInput {
     content: String
     tags: [String]
     imgUrl: String
     authorId: ID
+  }
+  input CommentInput {
+    postId: ID
+    content: String!
+    username: String!
   }
 
   type Query {
@@ -29,6 +37,7 @@ export const postTypeDefs = `#graphql
   }
   type Mutation {
     createPost(newPost: PostInput): String
+    createComment(newComment: CommentInput): String
   }
 `;
 export const postResolvers = {
@@ -41,6 +50,10 @@ export const postResolvers = {
   Mutation: {
     createPost: async (_, args) => {
       const response = await PostModel.createPost(args.newPost);
+      return response;
+    },
+    createComment: async (_, args) => {
+      const response = await PostModel.createComment(args.newComment);
       return response;
     },
   },

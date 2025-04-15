@@ -23,6 +23,27 @@ export default class PostModel {
     await collection.insertOne(payload);
     return "Berhasil menyimpan post";
   }
+
+  static async createComment(payload) {
+    if (!payload.content) {
+      throw new Error("Content is required");
+    }
+    if (!payload.username) {
+      throw new Error("Username is required");
+    }
+    const newComment = {
+      content: payload.content,
+      username: payload.username,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const collection = PostModel.getCollection();
+    await collection.updateOne(
+      { _id: new ObjectId(payload.postId) },
+      { $push: { comments: newComment } }
+    );
+    return "Berhasil menyimpan comment";
+  }
   static async find() {
     const collection = PostModel.getCollection();
     const posts = await collection.find().toArray();
