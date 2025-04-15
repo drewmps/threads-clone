@@ -78,9 +78,38 @@ export default class PostModel {
     );
     return "Berhasil menambah like";
   }
-  static async find() {
+  static async getPosts() {
     const collection = PostModel.getCollection();
-    const posts = await collection.find().toArray();
+    const posts = await collection
+      .aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $unwind: {
+            path: "$author",
+          },
+        },
+        {
+          $project: {
+            "author._id": 0,
+            "author.username": 0,
+            "author.email": 0,
+            "author.password": 0,
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ])
+      .toArray();
     return posts;
   }
 }

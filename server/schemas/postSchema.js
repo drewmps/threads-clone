@@ -48,7 +48,7 @@ export const postTypeDefs = `#graphql
 export const postResolvers = {
   Query: {
     getPosts: async () => {
-      const posts = await PostModel.find();
+      const posts = await PostModel.getPosts();
       return posts;
     },
   },
