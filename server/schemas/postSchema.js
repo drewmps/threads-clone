@@ -18,13 +18,15 @@ export const postTypeDefs = `#graphql
     authorId: ID
     comments: [Comment]
     likes: [Like]
+    createdAt: String
+    updatedAt: String
   }
 
   input PostInput {
-    content: String
+    content: String!
     tags: [String]
     imgUrl: String
-    authorId: ID
+    authorId: ID!
   }
   input CommentInput {
     postId: ID

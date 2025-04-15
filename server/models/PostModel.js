@@ -18,9 +18,11 @@ export default class PostModel {
 
     let newPost = payload;
     newPost.authorId = new ObjectId(newPost.authorId);
+    newPost.createdAt = new Date();
+    newPost.updatedAt = new Date();
 
     const collection = PostModel.getCollection();
-    await collection.insertOne(payload);
+    await collection.insertOne(newPost);
     return "Berhasil menyimpan post";
   }
 
