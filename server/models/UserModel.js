@@ -2,6 +2,7 @@ import { getDB } from "../config/mongodb.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt.js";
 import validator from "validator";
 import { signToken } from "../helpers/jwt.js";
+import { ObjectId } from "mongodb";
 
 export default class UserModel {
   static getCollection() {
@@ -82,6 +83,67 @@ export default class UserModel {
       })
       .toArray();
     return users;
+  }
+
+  static async getUserById({ userId }) {
+    const collection = UserModel.getCollection();
+    const users = await collection
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(userId),
+          },
+        },
+        {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followerId",
+            as: "listFollowing",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "listFollowing.followingId",
+            foreignField: "_id",
+            as: "following",
+          },
+        },
+        {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followingId",
+            as: "listFollower",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "listFollower.followerId",
+            foreignField: "_id",
+            as: "follower",
+          },
+        },
+        {
+          $project: {
+            listFollowing: 0,
+            "following._id": 0,
+            "following.name": 0,
+            "following.email": 0,
+            "following.password": 0,
+            listFollower: 0,
+            "follower._id": 0,
+            "follower.name": 0,
+            "follower.email": 0,
+            "follower.password": 0,
+          },
+        },
+      ])
+      .toArray();
+    if (!users.length === 0) throw new Error("User not found");
+    return users[0];
   }
   static async find() {
     const collection = UserModel.getCollection();

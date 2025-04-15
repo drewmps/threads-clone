@@ -12,10 +12,24 @@ export const userTypeDefs = `#graphql
   type LoginResponse {
     access_token: String
   }
+
+  type Follow {
+    username: String
+  }
+  type ReturnUser {
+    _id: ID
+    name: String
+    username: String
+    email: String
+    password: String
+    following: [Follow]
+    follower: [Follow]
+  }
   type Query {
     getUsers: [User]
     login(username: String, password: String): LoginResponse
     searchUser(keyword: String): [User]
+    getUserById(userId: ID): ReturnUser
   }
 
   input UserInput {
@@ -41,6 +55,10 @@ export const userResolvers = {
     searchUser: async (_, args) => {
       const users = await UserModel.search(args);
       return users;
+    },
+    getUserById: async (_, args) => {
+      const user = await UserModel.getUserById(args);
+      return user;
     },
   },
   Mutation: {
