@@ -51,6 +51,30 @@ export default class PostModel {
     );
     return "Berhasil menyimpan comment";
   }
+
+  static async likePost(payload) {
+    const collection = PostModel.getCollection();
+    if (!payload.username) {
+      throw new Error("Username is required");
+    }
+    const post = await collection.findOne({
+      _id: new ObjectId(payload.postId),
+    });
+    if (!post) {
+      throw new Error("Post not found");
+    }
+
+    const newLike = {
+      username: payload.username,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    await collection.updateOne(
+      { _id: new ObjectId(payload.postId) },
+      { $push: { likes: newLike } }
+    );
+    return "Berhasil menambah like";
+  }
   static async find() {
     const collection = PostModel.getCollection();
     const posts = await collection.find().toArray();
