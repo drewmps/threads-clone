@@ -5,6 +5,7 @@ import { userResolvers, userTypeDefs } from "./schemas/userSchema.js";
 import { postResolvers, postTypeDefs } from "./schemas/postSchema.js";
 import { followResolvers, followTypeDefs } from "./schemas/followSchema.js";
 import { verifyToken } from "./helpers/jwt.js";
+import UserModel from "./models/UserModel.js";
 
 const server = new ApolloServer({
   typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
@@ -17,7 +18,7 @@ const { url } = await startStandaloneServer(server, {
       const token = req.headers.authorization?.split(" ")[1];
       if (!token) throw new Error("Unauthorized");
       const payload = verifyToken(token);
-      const user = await UserModel.findOne(payload._id);
+      const user = await UserModel.findOne(payload.id);
       if (!user) throw new Error("Unauthorized");
       return user;
     };

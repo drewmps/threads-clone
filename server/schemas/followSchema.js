@@ -9,8 +9,7 @@ export const followTypeDefs = `#graphql
     updatedAt: String
   }
   input FollowInput {
-    followingId: ID!
-    followerId: ID!
+    followingId: ID!  
   }
   type Query {
     find: [Follow]
@@ -27,7 +26,11 @@ export const followResolvers = {
     },
   },
   Mutation: {
-    followUser: async (_, args) => {
+    followUser: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
+      let newFollow = args.newFollow;
+      newFollow.followerId = user._id.toString();
       const response = await FollowModel.followUser(args.newFollow);
       return response;
     },
