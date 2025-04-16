@@ -49,7 +49,6 @@ export const postTypeDefs = `#graphql
   input CommentInput {
     postId: ID
     content: String!
-    username: String!
   }
 
   type Query {
@@ -83,8 +82,13 @@ export const postResolvers = {
       const response = await PostModel.createPost(newPost);
       return response;
     },
-    createComment: async (_, args) => {
-      const response = await PostModel.createComment(args.newComment);
+    createComment: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
+
+      let { newComment } = args;
+      newComment.username = user.username;
+      const response = await PostModel.createComment(newComment);
       return response;
     },
     likePost: async (_, args) => {
