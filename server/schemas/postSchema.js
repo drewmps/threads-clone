@@ -1,3 +1,4 @@
+import redis from "../config/redis.js";
 import PostModel from "../models/PostModel.js";
 
 export const postTypeDefs = `#graphql
@@ -64,7 +65,12 @@ export const postTypeDefs = `#graphql
 export const postResolvers = {
   Query: {
     getPosts: async () => {
+      const cachedPosts = await redis.get("posts");
+      if (cachedPosts) return JSON.parse(cachedPosts);
+
       const posts = await PostModel.getPosts();
+      await redis.set("posts", JSON.stringify(posts));
+
       return posts;
     },
     getPostById: async (_, args) => {
@@ -80,6 +86,7 @@ export const postResolvers = {
       let { newPost } = args;
       newPost.authorId = user._id.toString();
       const response = await PostModel.createPost(newPost);
+      await redis.del("posts");
       return response;
     },
     createComment: async (_, args, contextValue) => {
