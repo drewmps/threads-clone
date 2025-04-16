@@ -28,6 +28,7 @@ export const postTypeDefs = `#graphql
 
   type ReturnPostAuthor {
     name: String
+    username: String
   }
   type ReturnPost {
     _id: ID

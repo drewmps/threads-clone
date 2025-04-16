@@ -103,7 +103,6 @@ export default class PostModel {
         {
           $project: {
             "author._id": 0,
-            "author.username": 0,
             "author.email": 0,
             "author.password": 0,
           },
@@ -137,7 +136,6 @@ export default class PostModel {
         {
           $project: {
             "author._id": 0,
-            "author.username": 0,
             "author.email": 0,
             "author.password": 0,
           },
