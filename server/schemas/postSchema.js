@@ -45,7 +45,6 @@ export const postTypeDefs = `#graphql
     content: String!
     tags: [String]
     imgUrl: String
-    authorId: ID!
   }
   input CommentInput {
     postId: ID
@@ -75,8 +74,13 @@ export const postResolvers = {
     },
   },
   Mutation: {
-    createPost: async (_, args) => {
-      const response = await PostModel.createPost(args.newPost);
+    createPost: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
+
+      let { newPost } = args;
+      newPost.authorId = user._id.toString();
+      const response = await PostModel.createPost(newPost);
       return response;
     },
     createComment: async (_, args) => {
