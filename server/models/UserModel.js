@@ -150,4 +150,9 @@ export default class UserModel {
     const users = await collection.find().toArray();
     return users;
   }
+  static async findOne(id) {
+    const collection = UserModel.getCollection();
+    const user = await collection.findOne({ _id: new ObjectId(id) });
+    return user;
+  }
 }
