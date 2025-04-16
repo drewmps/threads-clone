@@ -74,6 +74,7 @@ export default class UserModel {
 
   static async search(payload) {
     const collection = UserModel.getCollection();
+    if (!payload.keyword) throw new Error("Search term cannot be empty");
     const users = await collection
       .find({
         $or: [
