@@ -18,6 +18,8 @@ export default class PostModel {
 
     let newPost = payload;
     newPost.authorId = new ObjectId(newPost.authorId);
+    newPost.likes = [];
+    newPost.comments = [];
     newPost.createdAt = new Date();
     newPost.updatedAt = new Date();
 
