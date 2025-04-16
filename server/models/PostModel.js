@@ -69,6 +69,9 @@ export default class PostModel {
       throw new Error("Post not found");
     }
 
+    const like = post.likes.find((like) => like.username === payload.username);
+    if (like) throw new Error("Post is already liked");
+
     const newLike = {
       username: payload.username,
       createdAt: new Date(),

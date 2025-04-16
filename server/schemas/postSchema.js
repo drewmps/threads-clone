@@ -58,7 +58,7 @@ export const postTypeDefs = `#graphql
   type Mutation {
     createPost(newPost: PostInput): String
     createComment(newComment: CommentInput): String
-    likePost(postId: ID, username: String!): String
+    likePost(postId: ID): String
   }
 `;
 export const postResolvers = {
@@ -91,8 +91,14 @@ export const postResolvers = {
       const response = await PostModel.createComment(newComment);
       return response;
     },
-    likePost: async (_, args) => {
-      const response = await PostModel.likePost(args);
+    likePost: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
+      const { postId } = args;
+      const response = await PostModel.likePost({
+        postId,
+        username: user.username,
+      });
       return response;
     },
   },
