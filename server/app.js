@@ -10,6 +10,7 @@ import UserModel from "./models/UserModel.js";
 const server = new ApolloServer({
   typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
   resolvers: [userResolvers, postResolvers, followResolvers],
+  introspection: true,
 });
 const { url } = await startStandaloneServer(server, {
   listen: { port: 3000 },
