@@ -76,7 +76,9 @@ export const postResolvers = {
 
       return posts;
     },
-    getPostById: async (_, args) => {
+    getPostById: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
       const post = await PostModel.getPostById(args);
       return post;
     },
