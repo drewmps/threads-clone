@@ -38,7 +38,6 @@ export default function RegisterScreen() {
         style={styles.input}
         onChangeText={(text) => setName(text)}
         value={name}
-        secureTextEntry={true}
       />
       <Text>Email</Text>
       <TextInput
