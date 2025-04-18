@@ -52,7 +52,9 @@ export const userResolvers = {
       const response = await UserModel.login(args);
       return response;
     },
-    searchUser: async (_, args) => {
+    searchUser: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      await authN();
       const users = await UserModel.search(args);
       return users;
     },
