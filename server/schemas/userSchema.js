@@ -58,7 +58,9 @@ export const userResolvers = {
       const users = await UserModel.search(args);
       return users;
     },
-    getUserById: async (_, args) => {
+    getUserById: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      await authN();
       const user = await UserModel.getUserById(args);
       return user;
     },
