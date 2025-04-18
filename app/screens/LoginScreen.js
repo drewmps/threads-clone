@@ -1,17 +1,10 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useState } from "react";
 import { Text, View, TextInput, StyleSheet, Button } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import AuthContext from "../context/AuthContext";
-
-const LOGIN = gql`
-  query Login($username: String, $password: String) {
-    login(username: $username, password: $password) {
-      access_token
-    }
-  }
-`;
+import { LOGIN } from "../queries/queriesAndMutations";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");

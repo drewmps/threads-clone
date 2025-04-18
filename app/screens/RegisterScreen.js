@@ -1,13 +1,8 @@
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Text, TextInput, View, StyleSheet, Button } from "react-native";
-
-const REGISTER = gql`
-  mutation RegisterUser($newUser: UserInput) {
-    registerUser(newUser: $newUser)
-  }
-`;
+import { REGISTER } from "../queries/queriesAndMutations";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
