@@ -20,7 +20,9 @@ export const followTypeDefs = `#graphql
 `;
 export const followResolvers = {
   Query: {
-    find: async () => {
+    find: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      await authN();
       const follows = await FollowModel.find();
       return follows;
     },
