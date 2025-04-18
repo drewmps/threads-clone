@@ -130,12 +130,10 @@ export default class UserModel {
         {
           $project: {
             listFollowing: 0,
-            "following._id": 0,
             "following.name": 0,
             "following.email": 0,
             "following.password": 0,
             listFollower: 0,
-            "follower._id": 0,
             "follower.name": 0,
             "follower.email": 0,
             "follower.password": 0,
