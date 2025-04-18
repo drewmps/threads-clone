@@ -1,11 +1,38 @@
+import { gql, useLazyQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Text, View, TextInput, StyleSheet, Button } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import AuthContext from "../context/AuthContext";
+
+const LOGIN = gql`
+  query Login($username: String, $password: String) {
+    login(username: $username, password: $password) {
+      access_token
+    }
+  }
+`;
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  const { setIsLogin } = useContext(AuthContext);
+
+  const [handleLogin, { data, loading, error }] = useLazyQuery(LOGIN, {
+    onCompleted: async (result) => {
+      await SecureStore.setItemAsync("access_token", result.login.access_token);
+      setIsLogin(true);
+    },
+  });
+  const onSubmit = () => {
+    handleLogin({
+      variables: {
+        username,
+        password,
+      },
+    });
+  };
   return (
     <View>
       <Text>LoginScreen</Text>
@@ -22,7 +49,7 @@ export default function LoginScreen() {
         value={password}
         secureTextEntry={true}
       />
-      <Button title="Log In" />
+      <Button title="Log In" onPress={onSubmit} />
       <Button
         title="Register"
         onPress={() => navigation.navigate("RegisterScreen")}
