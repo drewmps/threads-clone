@@ -1,9 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Text, View, TextInput, StyleSheet, Button } from "react-native";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation();
   return (
     <View>
       <Text>LoginScreen</Text>
@@ -20,8 +22,11 @@ export default function LoginScreen() {
         value={password}
         secureTextEntry={true}
       />
-      <Button title="Login" />
-      <Button title="Register" />
+      <Button title="Log In" />
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate("RegisterScreen")}
+      />
     </View>
   );
 }
