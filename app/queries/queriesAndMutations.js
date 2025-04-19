@@ -13,3 +13,15 @@ export const REGISTER = gql`
     registerUser(newUser: $newUser)
   }
 `;
+
+export const GET_POSTS = gql`
+  query GetPosts {
+    getPosts {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+    }
+  }
+`;
