@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import AuthContext from "./context/AuthContext";
 import HomeScreen from "./screens/HomeScreen";
 import * as SecureStore from "expo-secure-store";
+import MainNavigator from "./Navigators/MainNavigator";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -32,9 +33,7 @@ export default function App() {
       <ApolloProvider client={client}>
         <NavigationContainer>
           {isLogin ? (
-            <Stack.Navigator>
-              <Stack.Screen name="HomeScreen" component={HomeScreen} />
-            </Stack.Navigator>
+            <MainNavigator />
           ) : (
             <Stack.Navigator>
               <Stack.Screen name="LoginScreen" component={LoginScreen} />
