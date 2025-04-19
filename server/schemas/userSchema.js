@@ -30,6 +30,7 @@ export const userTypeDefs = `#graphql
     login(username: String, password: String): LoginResponse
     searchUser(keyword: String): [User]
     getUserById(userId: ID): ReturnUser
+    getCurrentUser: ReturnUser
   }
 
   input UserInput {
@@ -65,6 +66,12 @@ export const userResolvers = {
       await authN();
       const user = await UserModel.getUserById(args);
       return user;
+    },
+    getCurrentUser: async (_, args, contextValue) => {
+      const { authN } = contextValue;
+      const user = await authN();
+      const currentUser = await UserModel.getUserById({ userId: user._id });
+      return currentUser;
     },
   },
   Mutation: {
