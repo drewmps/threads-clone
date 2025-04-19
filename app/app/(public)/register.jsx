@@ -1,6 +1,5 @@
 import {
   Alert,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,54 +9,57 @@ import {
 } from "react-native";
 import { Colors } from "../../constants/Colors";
 
-import { useLazyQuery } from "@apollo/client";
 import { useState } from "react";
-import * as SecureStore from "expo-secure-store";
-
-import { LOGIN } from "../../queries/queriesAndMutations";
+import { useMutation } from "@apollo/client";
+import { REGISTER } from "../../queries/queriesAndMutations";
 import { useRouter } from "expo-router";
 
-export default function Index() {
+export default function Register() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const [handleLogin, { data, loading, error }] = useLazyQuery(LOGIN, {
+  const [handleRegister, { data, loading, error }] = useMutation(REGISTER, {
     onError: (result) => {
       Alert.alert(result.message);
     },
-    onCompleted: async (result) => {
-      await SecureStore.setItemAsync("access_token", result.login.access_token);
-      // setIsLogin(true);
+    onCompleted: (result) => {
+      router.back();
     },
   });
   const onSubmit = () => {
-    handleLogin({
+    const payload = {
+      email,
+      name,
+      password,
+      username,
+    };
+    handleRegister({
       variables: {
-        username,
-        password,
+        newUser: payload,
       },
     });
   };
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync("access_token");
-    setIsLogin(false);
-  };
-  const cekToken = async () => {
-    const token = await SecureStore.getItemAsync("access_token");
-    console.log(token);
-  };
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/images/login.png")}
-        style={styles.loginImage}
-      />
-
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Login to Threads</Text>
-
+        <Text style={styles.title}>Register</Text>
+        <TextInput
+          placeholder="Name"
+          placeholderTextColor="#999"
+          style={styles.input}
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#999"
+          style={styles.input}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
         <TextInput
           placeholder="Username"
           placeholderTextColor="#999"
@@ -75,33 +77,8 @@ export default function Index() {
         />
 
         <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
-          <Text style={styles.loginButtonText}>Log In</Text>
+          <Text style={styles.loginButtonText}>Register</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
-          <Text style={styles.loginButtonText}>Log Out</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginButton} onPress={cekToken}>
-          <Text style={styles.loginButtonText}>Get Token</Text>
-        </TouchableOpacity>
-
-        <View style={styles.dividerContainer}>
-          <View style={styles.divider} />
-          <Text style={styles.orText}>OR</Text>
-          <View style={styles.divider} />
-        </View>
-
-        <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>Don't have an account? </Text>
-          <TouchableOpacity
-            onPress={() => {
-              router.push("/register");
-            }}
-          >
-            <Text style={styles.signupLink}>Sign up</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     </View>
   );
