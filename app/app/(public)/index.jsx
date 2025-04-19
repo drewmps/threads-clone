@@ -11,16 +11,18 @@ import {
 import { Colors } from "../../constants/Colors";
 
 import { useLazyQuery } from "@apollo/client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 
 import { LOGIN } from "../../queries/queriesAndMutations";
 import { useRouter } from "expo-router";
+import AuthenticationContext from "../../context/AuthenticationContext";
 
 export default function Index() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { isLogin, setIsLogin } = useContext(AuthenticationContext);
 
   const [handleLogin, { data, loading, error }] = useLazyQuery(LOGIN, {
     onError: (result) => {
@@ -28,7 +30,7 @@ export default function Index() {
     },
     onCompleted: async (result) => {
       await SecureStore.setItemAsync("access_token", result.login.access_token);
-      // setIsLogin(true);
+      setIsLogin(true);
     },
   });
   const onSubmit = () => {
@@ -40,14 +42,6 @@ export default function Index() {
     });
   };
 
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync("access_token");
-    setIsLogin(false);
-  };
-  const cekToken = async () => {
-    const token = await SecureStore.getItemAsync("access_token");
-    console.log(token);
-  };
   return (
     <View style={styles.container}>
       <Image
@@ -76,14 +70,6 @@ export default function Index() {
 
         <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
           <Text style={styles.loginButtonText}>Log In</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogout}>
-          <Text style={styles.loginButtonText}>Log Out</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginButton} onPress={cekToken}>
-          <Text style={styles.loginButtonText}>Get Token</Text>
         </TouchableOpacity>
 
         <View style={styles.dividerContainer}>
