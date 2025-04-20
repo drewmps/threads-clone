@@ -21,7 +21,17 @@ export const GET_POSTS = gql`
       content
       tags
       imgUrl
-      authorId
+      createdAt
+      author {
+        username
+      }
+      likes {
+        username
+      }
+      comments {
+        username
+        content
+      }
     }
   }
 `;
@@ -61,5 +71,17 @@ export const GET_CURRENT_USER = gql`
         username
       }
     }
+  }
+`;
+
+export const CREATE_POST = gql`
+  mutation CreatePost($newPost: PostInput) {
+    createPost(newPost: $newPost)
+  }
+`;
+
+export const LIKE_POST = gql`
+  mutation LikePost($postId: ID) {
+    likePost(postId: $postId)
   }
 `;
