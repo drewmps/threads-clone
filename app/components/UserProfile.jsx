@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   Alert,
   Image,
@@ -13,24 +13,12 @@ import { useUserProfile } from "../hooks/useUserProfile";
 import { Colors } from "../constants/Colors";
 
 export default function UserProfile({ userId }) {
-  const [handleGetProfile, { data, loading, error }] = useLazyQuery(
-    GET_PROFILE,
-    {
-      onError: (result) => {
-        Alert.alert(result.message);
-      },
-      onCompleted: (result) => {
-        // console.log("ini hasilnya", result);
-      },
-    }
-  );
-  useEffect(() => {
-    handleGetProfile({
-      variables: {
-        userId,
-      },
-    });
-  }, [userId]);
+  const { data, loading, error } = useQuery(GET_PROFILE, {
+    variables: {
+      userId,
+    },
+  });
+
   const { userProfile } = useUserProfile();
   const isSelf = userId === userProfile?._id;
 
@@ -41,6 +29,7 @@ export default function UserProfile({ userId }) {
     refetchQueries: [
       {
         query: GET_PROFILE,
+        variables: { userId },
       },
     ],
   });
@@ -76,8 +65,10 @@ export default function UserProfile({ userId }) {
           />
         </View>
       </View>
-      <Text style={styles.bio}>No bio</Text>
-      <Text>{data?.getUserById?.follower?.length} - No Website</Text>
+
+      <Text style={styles.bio}>
+        {data?.getUserById?.follower?.length} Followers
+      </Text>
       <View style={styles.buttonRow}>
         {isSelf && (
           <>
