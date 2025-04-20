@@ -11,7 +11,7 @@ export default function Page() {
   const { data, loading, error } = useQuery(GET_POST_BY_ID, {
     variables: { postId: id }, // 👈 pass your parameter here
   });
-  console.log("Ini data", data);
+
   if (loading) {
     return (
       <View>

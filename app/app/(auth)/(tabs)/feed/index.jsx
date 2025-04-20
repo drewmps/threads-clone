@@ -20,14 +20,6 @@ export default function Page() {
   const { isLogin, setIsLogin } = useContext(AuthenticationContext);
   const { data, loading, error } = useQuery(GET_POSTS);
   const { top } = useSafeAreaInsets();
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync("access_token");
-    setIsLogin(false);
-  };
-  const cekToken = async () => {
-    const token = await SecureStore.getItemAsync("access_token");
-    console.log(token);
-  };
 
   if (loading) {
     return (
@@ -42,7 +34,6 @@ export default function Page() {
       showsVerticalScrollIndicator={false}
       data={data?.getPosts}
       renderItem={({ item }) => {
-        console.log(`(auth)/(tabs)/feed/${item?._id}`);
         return (
           <Link href={`(auth)/(tabs)/feed/${item?._id}`} asChild>
             <TouchableOpacity>

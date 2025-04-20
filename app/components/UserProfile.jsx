@@ -13,7 +13,6 @@ import { useUserProfile } from "../hooks/useUserProfile";
 import { Colors } from "../constants/Colors";
 
 export default function UserProfile({ userId }) {
-  console.log("ini userId:", userId);
   const [handleGetProfile, { data, loading, error }] = useLazyQuery(
     GET_PROFILE,
     {
@@ -21,7 +20,7 @@ export default function UserProfile({ userId }) {
         Alert.alert(result.message);
       },
       onCompleted: (result) => {
-        console.log("ini hasilnya", result);
+        // console.log("ini hasilnya", result);
       },
     }
   );
@@ -56,7 +55,6 @@ export default function UserProfile({ userId }) {
     });
   };
   if (loading) {
-    console.log("ini lagi loading");
     return (
       <View>
         <Text>loading...</Text>

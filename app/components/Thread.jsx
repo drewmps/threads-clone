@@ -34,7 +34,7 @@ export default function Thread({ thread }) {
       },
     ],
   });
-  console.log("ini author id", authorId);
+
   const likeThread = () => {
     handleLike({
       variables: {

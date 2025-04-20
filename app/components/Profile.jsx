@@ -27,7 +27,7 @@ export default function Profile(userId, showBackButton = false) {
     await SecureStore.deleteItemAsync("access_token");
     setIsLogin(false);
   };
-  console.log("userId", userId);
+
   return (
     <View style={[styles.container, { paddingTop: top }]}>
       <FlatList

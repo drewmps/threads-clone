@@ -30,7 +30,7 @@ export default function Page() {
       </View>
     );
   }
-  console.log("ini data", data);
+
   return (
     <View>
       <Stack.Screen
