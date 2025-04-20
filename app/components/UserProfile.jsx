@@ -65,10 +65,14 @@ export default function UserProfile({ userId }) {
           />
         </View>
       </View>
-
-      <Text style={styles.bio}>
-        {data?.getUserById?.follower?.length} Followers
-      </Text>
+      <View style={{ flexDirection: "row", gap: 16 }}>
+        <Text style={styles.bio}>
+          {data?.getUserById?.follower?.length} Followers
+        </Text>
+        <Text style={styles.bio}>
+          {data?.getUserById?.following?.length} Following
+        </Text>
+      </View>
       <View style={styles.buttonRow}>
         {isSelf && (
           <>
