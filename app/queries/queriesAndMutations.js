@@ -86,3 +86,27 @@ export const LIKE_POST = gql`
     likePost(postId: $postId)
   }
 `;
+
+export const GET_POST_BY_ID = gql`
+  query GetPostById($postId: ID) {
+    getPostById(postId: $postId) {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      author {
+        username
+      }
+      comments {
+        content
+        username
+      }
+      likes {
+        username
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

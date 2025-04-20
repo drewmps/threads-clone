@@ -15,6 +15,7 @@ import { useQuery } from "@apollo/client";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ThreadComposer from "../../(modal)/create";
 import Thread from "../../../../components/Thread";
+import { Link } from "expo-router";
 export default function Page() {
   const { isLogin, setIsLogin } = useContext(AuthenticationContext);
   const { data, loading, error } = useQuery(GET_POSTS);
@@ -41,7 +42,14 @@ export default function Page() {
       showsVerticalScrollIndicator={false}
       data={data?.getPosts}
       renderItem={({ item }) => {
-        return <Thread thread={item} />;
+        console.log(`(auth)/(tabs)/feed/${item?._id}`);
+        return (
+          <Link href={`(auth)/(tabs)/feed/${item?._id}`} asChild>
+            <TouchableOpacity>
+              <Thread thread={item} />
+            </TouchableOpacity>
+          </Link>
+        );
       }}
       keyExtractor={(item) => item._id}
       ItemSeparatorComponent={() => (
