@@ -17,10 +17,7 @@ import UserProfile from "./UserProfile";
 import { useUserProfile } from "../hooks/useUserProfile";
 import Tabs from "./Tabs";
 
-export default function Profile(
-  userId = "67fd14d6497e173b279173da",
-  showBackButton = false
-) {
+export default function Profile(userId, showBackButton = false) {
   const { setIsLogin } = useContext(AuthenticationContext);
   const { top } = useSafeAreaInsets();
   const router = useRouter();
@@ -72,7 +69,9 @@ export default function Profile(
                 </TouchableOpacity>
               </View>
             </View>
-            {!userId?.segment && userId && <UserProfile userId={userId} />}
+            {!userId?.segment && userId && (
+              <UserProfile userId={userId?.userId} />
+            )}
             {userId?.segment && userProfile && (
               <UserProfile userId={userProfile?._id} />
             )}

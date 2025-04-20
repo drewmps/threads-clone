@@ -10,10 +10,20 @@ import {
 import { Colors } from "../constants/Colors";
 import { GET_POSTS, LIKE_POST } from "../queries/queriesAndMutations";
 import { useMutation } from "@apollo/client";
+import { Link } from "expo-router";
 
 export default function Thread({ thread }) {
-  const { _id, content, tags, imgUrl, author, likes, comments, createdAt } =
-    thread;
+  const {
+    _id,
+    content,
+    tags,
+    imgUrl,
+    authorId,
+    author,
+    likes,
+    comments,
+    createdAt,
+  } = thread;
   const [handleLike, { data, loading, error }] = useMutation(LIKE_POST, {
     onError: (result) => {
       Alert.alert(result.message);
@@ -24,6 +34,7 @@ export default function Thread({ thread }) {
       },
     ],
   });
+  console.log("ini author id", authorId);
   const likeThread = () => {
     handleLike({
       variables: {
@@ -40,7 +51,9 @@ export default function Thread({ thread }) {
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
           <View style={styles.headerText}>
-            <Text style={styles.headerTextUsername}>{author.username}</Text>
+            <Link href={`/feed/profile/${authorId}`} asChild>
+              <Text style={styles.headerTextUsername}>{author.username}</Text>
+            </Link>
             <Text style={styles.timestamp}>
               {createdAt
                 ? new Date(createdAt).toLocaleDateString()
