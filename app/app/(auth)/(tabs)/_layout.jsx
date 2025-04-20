@@ -95,6 +95,7 @@ export default function Layout() {
         name="profile"
         options={{
           title: "Profile",
+          headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "person" : "person-outline"}
@@ -102,13 +103,6 @@ export default function Layout() {
               size={size}
             />
           ),
-          headerRight: () => {
-            return (
-              <TouchableOpacity onPress={handleLogout}>
-                <Ionicons name="log-out" size={24} />
-              </TouchableOpacity>
-            );
-          },
         }}
       />
     </Tabs>

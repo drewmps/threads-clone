@@ -10,28 +10,35 @@ import {
 } from "react-native";
 import { Colors } from "../../constants/Colors";
 
-import { useLazyQuery } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation } from "@apollo/client";
 import { useContext, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 
-import { LOGIN } from "../../queries/queriesAndMutations";
+import { GET_CURRENT_USER, LOGIN } from "../../queries/queriesAndMutations";
 import { useRouter } from "expo-router";
 import AuthenticationContext from "../../context/AuthenticationContext";
 
 export default function Index() {
+  const client = useApolloClient();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { isLogin, setIsLogin } = useContext(AuthenticationContext);
 
-  const [handleLogin, { data, loading, error }] = useLazyQuery(LOGIN, {
+  const [handleLogin, { data, loading, error }] = useMutation(LOGIN, {
     onError: (result) => {
       Alert.alert(result.message);
     },
     onCompleted: async (result) => {
       await SecureStore.setItemAsync("access_token", result.login.access_token);
+      await client.resetStore();
       setIsLogin(true);
     },
+    refetchQueries: [
+      {
+        query: GET_CURRENT_USER,
+      },
+    ],
   });
   const onSubmit = () => {
     handleLogin({
