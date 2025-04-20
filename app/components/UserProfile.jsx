@@ -1,4 +1,4 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   Alert,
   Image,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { GET_PROFILE } from "../queries/queriesAndMutations";
+import { FOLLOW_USER, GET_PROFILE } from "../queries/queriesAndMutations";
 import { useEffect } from "react";
 import { useUserProfile } from "../hooks/useUserProfile";
 import { Colors } from "../constants/Colors";
@@ -35,6 +35,26 @@ export default function UserProfile({ userId }) {
   const { userProfile } = useUserProfile();
   const isSelf = userId === userProfile?._id;
 
+  const [handleFollow] = useMutation(FOLLOW_USER, {
+    onError: (result) => {
+      Alert.alert(result.message);
+    },
+    refetchQueries: [
+      {
+        query: GET_PROFILE,
+      },
+    ],
+  });
+
+  const handleClickFollow = () => {
+    handleFollow({
+      variables: {
+        newFollow: {
+          followingId: userId,
+        },
+      },
+    });
+  };
   if (loading) {
     console.log("ini lagi loading");
     return (
@@ -74,7 +94,12 @@ export default function UserProfile({ userId }) {
 
         {!isSelf && (
           <>
-            <TouchableOpacity style={styles.fullButton}>
+            <TouchableOpacity
+              style={styles.fullButton}
+              onPress={() => {
+                handleClickFollow();
+              }}
+            >
               <Text style={styles.fullButtonText}>Follow</Text>
             </TouchableOpacity>
           </>

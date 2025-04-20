@@ -110,3 +110,20 @@ export const GET_POST_BY_ID = gql`
     }
   }
 `;
+
+export const SEARCH_USER = gql`
+  query SearchUser($keyword: String) {
+    searchUser(keyword: $keyword) {
+      _id
+      email
+      name
+      username
+    }
+  }
+`;
+
+export const FOLLOW_USER = gql`
+  mutation FollowUser($newFollow: FollowInput) {
+    followUser(newFollow: $newFollow)
+  }
+`;
