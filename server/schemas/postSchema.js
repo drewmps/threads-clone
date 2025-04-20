@@ -101,6 +101,7 @@ export const postResolvers = {
       let { newComment } = args;
       newComment.username = user.username;
       const response = await PostModel.createComment(newComment);
+      await redis.del("posts");
       return response;
     },
     likePost: async (_, args, contextValue) => {
@@ -111,6 +112,7 @@ export const postResolvers = {
         postId,
         username: user.username,
       });
+      await redis.del("posts");
       return response;
     },
   },
