@@ -27,7 +27,6 @@ export const userTypeDefs = `#graphql
   }
   type Query {
     getUsers: [User]
-    login(username: String, password: String): LoginResponse
     searchUser(keyword: String): [User]
     getUserById(userId: ID): ReturnUser
     getCurrentUser: ReturnUser
@@ -41,6 +40,7 @@ export const userTypeDefs = `#graphql
   }
   type Mutation {
     registerUser(newUser: UserInput): String
+    login(username: String, password: String): LoginResponse
   }
 `;
 export const userResolvers = {
@@ -50,10 +50,6 @@ export const userResolvers = {
       await authN();
       const users = await UserModel.find();
       return users;
-    },
-    login: async (_, args) => {
-      const response = await UserModel.login(args);
-      return response;
     },
     searchUser: async (_, args, contextValue) => {
       const { authN } = contextValue;
@@ -78,6 +74,10 @@ export const userResolvers = {
     registerUser: async (_, args) => {
       const message = await UserModel.register(args.newUser);
       return message;
+    },
+    login: async (_, args) => {
+      const response = await UserModel.login(args);
+      return response;
     },
   },
 };
